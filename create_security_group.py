@@ -53,7 +53,7 @@ def generate_options_for_vpc_id(control_value=None, **kwargs):
 
 
 def generate_options_for_direction(**kwargs):
-    return ['Ingress', 'Egress']
+    return ['Ingress', 'Egress', 'Both']
 
 
 def generate_options_for_ip_protocol(**kwargs):
@@ -118,7 +118,7 @@ def run(job, logger=None, **kwargs):
         set_progress('Security Group Created %s in vpc %s.' %
                      (security_group_id, vpc_id))
 
-        if direction == 'Ingress':
+        if direction == 'Ingress' or direction == 'Both':
             data = ec2_client.authorize_security_group_ingress(
                 GroupId=security_group_id,
                 IpPermissions=[
@@ -128,7 +128,7 @@ def run(job, logger=None, **kwargs):
                      'IpRanges': [{'CidrIp': cidr_ip}]}
                 ])
             set_progress('Ingress Successfully Set %s' % data)
-        elif direction == 'Egress':
+        elif direction == 'Egress' or direction == 'Both:
             data = ec2_client.authorize_security_group_egress(
                 GroupId=security_group_id,
                 IpPermissions=[
